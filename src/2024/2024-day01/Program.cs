@@ -59,19 +59,15 @@ int CalculatePotionsRequired(IEnumerable<string> monsterGroup)
         var numberOfPotionsRequired = 0;
         foreach (var groupOfMonsters in monsterGroup)
         {
-            var subtotal       = 0;
             var monsterSymbols = ExtractMonsterSymbols(monsters);
             var currentGroup   = groupOfMonsters.Where(x => monsterSymbols.Contains(x)).Select(c => monsters.First(m => m.Symbol == c)).ToList();
-            foreach (var monster in currentGroup)
-            {
-                var numberOfPotionsToOrder = currentGroup.Count switch
+            var subtotal = currentGroup.Sum(
+                monster => currentGroup.Count switch
                 {
                     3 => monster.NumberOfPotionsTriplet,
                     2 => monster.NumberOfPotionsPaired,
                     _ => monster.NumberOfPotions
-                };
-                subtotal += numberOfPotionsToOrder;
-            }
+                });
 
             Console.WriteLine($"{subtotal} : {string.Join(',', currentGroup.Select(m => m.Name))}");
             numberOfPotionsRequired += subtotal;
