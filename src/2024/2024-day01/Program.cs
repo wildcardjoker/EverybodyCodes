@@ -43,7 +43,7 @@ int SumPotionsRequired(Monster monster)
 int CalculatePotionsRequired(IEnumerable<string> enumerable)
 {
     {
-        var i = 0;
+        var numberOfPotionsRequired = 0;
         foreach (var pair in enumerable)
 {
     Console.Write($"{pair}: ");
@@ -56,12 +56,12 @@ int CalculatePotionsRequired(IEnumerable<string> enumerable)
         Console.Write($"{monster.Name} ({(isPair ? monster.NumberOfPotionsPaired : monster.NumberOfPotions)}) ");
     }
 
-            i += subtotal;
+            numberOfPotionsRequired += subtotal;
 
     Console.WriteLine($" ### {subtotal} ###");
 }
 
-        return i;
+        return numberOfPotionsRequired;
     }
 }
 
