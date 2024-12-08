@@ -2,9 +2,11 @@
 using System.Text.RegularExpressions;
 #endregion
 
-var input      = File.ReadAllText("input1.txt");
-var characters = input.ToCharArray();
+// Set up some variables used in all parts
+string input;
+int    potionsRequired;
 
+// These are the monsters we'll face, and the number of potions required to defeat them.
 List<Monster> monsters =
 [
     new ("Ancient Ant", 0),
@@ -12,40 +14,43 @@ List<Monster> monsters =
     new ("Creepy Cockroach", 3)
 ];
 
-// Part 1
-var potionsRequired = monsters.Sum(SumPotionsRequired);
-Console.WriteLine($"Part 1: {potionsRequired} potions required.");
-
-// Part 2
-// Monsters can pair up, and will require +1 potion for each monster in a pair.
-
-// Different input!
-input = File.ReadAllText("input2.txt");
-
-// A new monster is introduced: The Diabolical Dragonfly
-monsters.Add(new Monster("Diabolical Dragonfly", 5));
-
-// Create a collection of monster symbols
-var monsterSymbols = monsters.Select(m => m.Symbol).ToArray();
-
-// Split the input into pairs of monsters
-var pairs = MonsterPairRegex().Matches(input).Select(m => m.Value);
-potionsRequired = CalculatePotionsRequired(pairs);
-Console.WriteLine($"Part 2: {potionsRequired} potions required");
-
-// Part 3
-// Monsters can now form triplets, and will require +2 potions for each monster in a triplet.
-input = File.ReadAllText("input3.txt");
-var triplets = MonsterTripletRegex().Matches(input).Select(m => m.Value);
-
-potionsRequired = CalculatePotionsRequired(triplets);
-Console.WriteLine($"Part 3: {potionsRequired} potions required");
-
+RunPart1();
+RunPart2();
+RunPart3();
 return;
 
-int SumPotionsRequired(Monster monster)
+void RunPart1()
 {
-    return characters.Count(c => c.Equals(monster.Symbol)) * monster.NumberOfPotions;
+    // Part 1
+    input = File.ReadAllText("input1.txt");
+    var characters = input.ToCharArray();
+    potionsRequired = monsters.Sum(monster => characters.Count(c => c.Equals(monster.Symbol)) * monster.NumberOfPotions);
+    Console.WriteLine($"Part 1: {potionsRequired} potions required.");
+    Pause();
+}
+
+void RunPart2()
+{
+    // Monsters can pair up, and will require +1 potion for each monster in a pair.
+    input = File.ReadAllText("input2.txt");
+
+    // A new monster is introduced: The Diabolical Dragonfly
+    monsters.Add(new Monster("Diabolical Dragonfly", 5));
+
+    // Split the input into pairs of monsters
+    var pairs = MonsterPairRegex().Matches(input).Select(m => m.Value);
+    potionsRequired = CalculatePotionsRequired(pairs);
+    Console.WriteLine($"Part 2: {potionsRequired} potions required");
+    Pause();
+}
+
+void RunPart3()
+{
+    // Monsters can now form triplets, and will require +2 potions for each monster in a triplet.
+    input = File.ReadAllText("input3.txt");
+    var triplets = MonsterTripletRegex().Matches(input).Select(m => m.Value);
+    potionsRequired = CalculatePotionsRequired(triplets);
+    Console.WriteLine($"Part 3: {potionsRequired} potions required");
 }
 
 int CalculatePotionsRequired(IEnumerable<string> monsterGroup)
@@ -54,10 +59,9 @@ int CalculatePotionsRequired(IEnumerable<string> monsterGroup)
         var numberOfPotionsRequired = 0;
         foreach (var groupOfMonsters in monsterGroup)
         {
-            //Console.Write($"{groupOfMonsters}: ");
-
-            var subtotal     = 0;
-            var currentGroup = groupOfMonsters.Where(x => monsterSymbols.Contains(x)).Select(c => monsters.First(m => m.Symbol == c)).ToList();
+            var subtotal       = 0;
+            var monsterSymbols = ExtractMonsterSymbols(monsters);
+            var currentGroup   = groupOfMonsters.Where(x => monsterSymbols.Contains(x)).Select(c => monsters.First(m => m.Symbol == c)).ToList();
             foreach (var monster in currentGroup)
             {
                 var numberOfPotionsToOrder = currentGroup.Count switch
@@ -67,17 +71,25 @@ int CalculatePotionsRequired(IEnumerable<string> monsterGroup)
                     _ => monster.NumberOfPotions
                 };
                 subtotal += numberOfPotionsToOrder;
-
-                //Console.Write($"{monster.Name} ({numberOfPotionsToOrder}) ");
             }
 
+            Console.WriteLine($"{subtotal} : {string.Join(',', currentGroup.Select(m => m.Name))}");
             numberOfPotionsRequired += subtotal;
-
-            //Console.WriteLine($" ### {subtotal} ###");
         }
 
         return numberOfPotionsRequired;
     }
+}
+
+void Pause()
+{
+    Console.WriteLine("Press any key to continue...");
+    Console.ReadKey();
+}
+
+char[] ExtractMonsterSymbols(List<Monster> list)
+{
+    return list.Select(m => m.Symbol).ToArray();
 }
 
 internal partial class Program
