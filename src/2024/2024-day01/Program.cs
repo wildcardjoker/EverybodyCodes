@@ -31,8 +31,16 @@ var monsterSymbols = monsters.Select(m => m.Symbol).ToArray();
 // Split the input into pairs of monsters
 var pairs = MonsterPairRegex().Matches(input).Select(m => m.Value);
 potionsRequired = CalculatePotionsRequired(pairs);
-
 Console.WriteLine($"Part 2: {potionsRequired} potions required");
+
+// Part 3
+// Monsters can now form triplets, and will require +2 potions for each monster in a triplet.
+input = File.ReadAllText("input3.txt");
+var triplets = MonsterTripletRegex().Matches(input).Select(m => m.Value);
+
+potionsRequired = CalculatePotionsRequired(triplets);
+Console.WriteLine($"Part 3: {potionsRequired} potions required");
+
 return;
 
 int SumPotionsRequired(Monster monster)
@@ -40,48 +48,54 @@ int SumPotionsRequired(Monster monster)
     return characters.Count(c => c.Equals(monster.Symbol)) * monster.NumberOfPotions;
 }
 
-int CalculatePotionsRequired(IEnumerable<string> enumerable)
+int CalculatePotionsRequired(IEnumerable<string> monsterGroup)
 {
     {
         var numberOfPotionsRequired = 0;
-        foreach (var pair in enumerable)
-{
-    Console.Write($"{pair}: ");
+        foreach (var groupOfMonsters in monsterGroup)
+        {
+            //Console.Write($"{groupOfMonsters}: ");
 
-    var isPair   = IsPairOfMonsters(pair);
-    var subtotal = 0;
-    foreach (var monster in pair.Where(x => monsterSymbols.Contains(x)).Select(c => monsters.First(m => m.Symbol == c)))
-    {
-        subtotal += isPair ? monster.NumberOfPotionsPaired : monster.NumberOfPotions;
-        Console.Write($"{monster.Name} ({(isPair ? monster.NumberOfPotionsPaired : monster.NumberOfPotions)}) ");
-    }
+            var subtotal     = 0;
+            var currentGroup = groupOfMonsters.Where(x => monsterSymbols.Contains(x)).Select(c => monsters.First(m => m.Symbol == c)).ToList();
+            foreach (var monster in currentGroup)
+            {
+                var numberOfPotionsToOrder = currentGroup.Count switch
+                {
+                    3 => monster.NumberOfPotionsTriplet,
+                    2 => monster.NumberOfPotionsPaired,
+                    _ => monster.NumberOfPotions
+                };
+                subtotal += numberOfPotionsToOrder;
+
+                //Console.Write($"{monster.Name} ({numberOfPotionsToOrder}) ");
+            }
 
             numberOfPotionsRequired += subtotal;
 
-    Console.WriteLine($" ### {subtotal} ###");
-}
+            //Console.WriteLine($" ### {subtotal} ###");
+        }
 
         return numberOfPotionsRequired;
     }
-}
-
-bool IsPairOfMonsters(string pair)
-{
-    return pair.All(c => monsters.Select(m => m.Symbol).Contains(c));
 }
 
 internal partial class Program
 {
     [GeneratedRegex(".{2}")]
     private static partial Regex MonsterPairRegex();
+
+    [GeneratedRegex(".{3}")]
+    private static partial Regex MonsterTripletRegex();
 }
 
 internal class Monster(string name, int numberOfPotions)
 {
     #region Properties
-    public string Name                  {get;} = name;
-    public int    NumberOfPotions       {get;} = numberOfPotions;
-    public int    NumberOfPotionsPaired {get;} = numberOfPotions + 1;
-    public char   Symbol                {get;} = name[0];
+    public string Name                   {get;} = name;
+    public int    NumberOfPotions        {get;} = numberOfPotions;
+    public int    NumberOfPotionsPaired  {get;} = numberOfPotions + 1;
+    public int    NumberOfPotionsTriplet {get;} = numberOfPotions + 2;
+    public char   Symbol                 {get;} = name[0];
     #endregion
 }
