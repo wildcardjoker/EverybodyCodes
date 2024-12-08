@@ -37,9 +37,8 @@ foreach (var pair in pairs)
 
     var isPair   = IsPairOfMonsters(pair);
     var subtotal = 0;
-    foreach (var c in pair.Where(x => monsterSymbols.Contains(x)))
+    foreach (var monster in pair.Where(x => monsterSymbols.Contains(x)).Select(c => monsters.First(m => m.Symbol == c)))
     {
-        var monster = monsters.First(m => m.Symbol == c);
         subtotal += isPair ? monster.NumberOfPotionsPaired : monster.NumberOfPotions;
         Console.Write($"{monster.Name} ({(isPair ? monster.NumberOfPotionsPaired : monster.NumberOfPotions)}) ");
     }
