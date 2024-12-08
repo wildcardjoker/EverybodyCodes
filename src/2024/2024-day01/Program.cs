@@ -1,8 +1,12 @@
-﻿var input           = File.ReadAllText("input.txt").ToCharArray();
-var potionsRequired = 0;
+﻿var input      = File.ReadAllText("input.txt");
+var characters = input.ToCharArray();
 
-// No potions required for Ancient Ants
-potionsRequired += input.Count(c => c.Equals('B'));     // 1 potion for each Badass Beetle
-potionsRequired += input.Count(c => c.Equals('C')) * 3; // 3 potions for each Creepy Cockroach
-
+(char monster, int numberOfPotionsPerMonster)[] monsters        = [('A', 0), ('B', 1), ('C', 3)];
+var                                             potionsRequired = monsters.Sum(tuple => SumPotionsRequired(tuple.monster, tuple.numberOfPotionsPerMonster));
 Console.WriteLine($"Part 1: {potionsRequired} potions required.");
+return;
+
+int SumPotionsRequired(char monster, int numberOfPotionsPerMonster)
+{
+    return characters.Count(c => c.Equals(monster)) * numberOfPotionsPerMonster;
+}
