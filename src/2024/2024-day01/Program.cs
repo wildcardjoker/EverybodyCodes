@@ -30,8 +30,21 @@ var monsterSymbols = monsters.Select(m => m.Symbol).ToArray();
 
 // Split the input into pairs of monsters
 var pairs = MonsterPairRegex().Matches(input).Select(m => m.Value);
-potionsRequired = 0; // Reset potions required
-foreach (var pair in pairs)
+potionsRequired = CalculatePotionsRequired(pairs);
+
+Console.WriteLine($"Part 2: {potionsRequired} potions required");
+return;
+
+int SumPotionsRequired(Monster monster)
+{
+    return characters.Count(c => c.Equals(monster.Symbol)) * monster.NumberOfPotions;
+}
+
+int CalculatePotionsRequired(IEnumerable<string> enumerable)
+{
+    {
+        var i = 0;
+        foreach (var pair in enumerable)
 {
     Console.Write($"{pair}: ");
 
@@ -43,18 +56,13 @@ foreach (var pair in pairs)
         Console.Write($"{monster.Name} ({(isPair ? monster.NumberOfPotionsPaired : monster.NumberOfPotions)}) ");
     }
 
-    potionsRequired += subtotal;
+            i += subtotal;
 
     Console.WriteLine($" ### {subtotal} ###");
 }
 
-Console.WriteLine($"Part 2: {potionsRequired} potions required");
-
-return;
-
-int SumPotionsRequired(Monster monster)
-{
-    return characters.Count(c => c.Equals(monster.Symbol)) * monster.NumberOfPotions;
+        return i;
+    }
 }
 
 bool IsPairOfMonsters(string pair)
