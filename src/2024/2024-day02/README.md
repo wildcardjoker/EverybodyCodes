@@ -29,3 +29,33 @@ Other examples for the same WORDS list as above:
 * **THER**E IS **THE** END: **3 runic words** (THE and HER overlap)
 
 *What is the number of runic words engraved on the helmet?*
+
+## Part II
+Congratulations! Your correct answer allows you to advance to the next chamber. This time, your challenge centers around a colossal shield, worn down over time and scarred from countless battles. Yet, despite its age, the runic symbols etched upon it remain as vivid and clear as ever.
+
+The list of potential runic words is still at your disposal, but it has grown considerably longer. However, the **objective of the task has changed**. This time, your focus is not on counting the runic words, but rather on counting the **runic symbols** that make up those words inscribed on the shield.
+
+The inscription sprawls across the shield in **many individual lines**, each demanding careful interpretation. Moreover, these inscriptions can be read from left to right or from right to left, meaning you must **search for runic words in both directions**.
+
+### Example based on the following notes:
+
+```
+WORDS:THE,OWE,MES,ROD,HER,QAQ
+
+AWAKEN THE POWE ADORNED WITH THE FLAMES BRIGHT IRE
+THE FLAME SHIELDED THE HEART OF THE KINGS
+POWE PO WER P OWE R
+THERE IS THE END
+QAQAQ
+```
+
+For this inscription, counting the runic symbols proceeds as follows:
+
+* AWAKEN **THE** P**OWE** A**DOR**NED WITH **THE** FLA**MES** BRIGHT IRE: **15 runic symbols**
+* **THE** FLAME SHIELDED **THE** HEART OF **THE** KINGS: **9 runic symbols**
+* P**OWE** PO WER P **OWE** R: **6 runic symbols**
+* **THE**RE IS **THE** END: **7 runic symbols**
+* **QAQAQ**: **5 runic symbols** (two QAQ words overlap each other)
+Thus, the final count is: `15 + 9 + 6 + 7 + 5 =` **42 runic symbols**
+
+What is the number of runic symbols engraved on the shield that form runic words?
