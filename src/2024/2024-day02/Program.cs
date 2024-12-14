@@ -7,6 +7,7 @@
 
 Part1();
 Part2();
+Part3();
 return;
 
 void Part1()
@@ -66,6 +67,92 @@ void Part2()
     }
 
     Console.WriteLine($"Total runic symbols: {totalRunicSymbols}");
+}
+
+void Part3()
+{
+    var input       = GetInput("input3-example.txt");
+    var words       = GetWords(input);
+    var inscription = input[1..];
+
+    var grid              = inscription.Select(s => s.ToCharArray()).ToArray();
+    var columns           = grid[0].Length;
+    var totalRunicSymbols = 0;
+    Console.WriteLine();
+    WriteWords(3, words);
+    var gridSymbols = new HashSet<(int row, int col)>();
+
+    // Check for runes in the grid using a sliding window and wrapping around the grid
+    for (var row = 0; row < grid.Length; row++)
+    {
+        for (var col = 0; col < columns; col++)
+        {
+            foreach (var word in words)
+            {
+                // Check horizontally
+                var found = true;
+                for (var i = 0; i < word.Length; i++)
+                {
+                    if (grid[row][(col + i) % columns] != word[i])
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    for (var i = 0; i < word.Length; i++)
+                    {
+                        gridSymbols.Add((row, (col + i) % columns));
+                    }
+                }
+
+                // Check vertically
+                found = true;
+
+                // Check vertically
+                if (row + word.Length <= grid.Length)
+                {
+                    found = true;
+                    for (var i = 0; i < word.Length; i++)
+                    {
+                        if (grid[row + i][col] != word[i])
+                        {
+                            found = false;
+                            break;
+                        }
+                    }
+
+                    if (found)
+                    {
+                        for (var i = 0; i < word.Length; i++)
+                        {
+                            gridSymbols.Add((row + i, col));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Display gridSymbols, using a 2D array to display the grid
+    for (var row = 0; row < grid.Length; row++)
+    {
+        for (var col = 0; col < columns; col++)
+        {
+            Console.Write(gridSymbols.Contains((row, col)) ? '*' : ".");
+        }
+
+        Console.WriteLine();
+    }
+
+    foreach (var symbol in gridSymbols)
+    {
+        Console.WriteLine($"({symbol.row},{symbol.col})");
+    }
+
+    Console.WriteLine($"Total runic symbols (part 3): {gridSymbols.Count}");
 }
 
 void WriteWords(int part, IEnumerable<string> words)

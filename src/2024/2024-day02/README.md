@@ -59,3 +59,31 @@ For this inscription, counting the runic symbols proceeds as follows:
 Thus, the final count is: `15 + 9 + 6 + 7 + 5 =` **42 runic symbols**
 
 What is the number of runic symbols engraved on the shield that form runic words?
+
+## Part III
+
+You advance carefully to the final examination chamber, where a set of **scale armour** awaits the candidates. This armour, unlike anything you've encountered before, is covered in scales, each etched with a runic symbol. The scales are meticulously arranged in a rectangular grid, with the **right edge seamlessly connected to the left**, forming an unbroken loop.
+
+In this challenge, neighbouring scales can form runic words both horizontally and vertically: left to right, right to left, top to bottom, bottom to top. Your task remains as it was before: to find all the runic words hidden within the armour and **count the number of scales** that compose them.
+
+### Example based on the following notes:
+
+```
+WORDS:THE,OWE,MES,ROD,RODEO
+
+HELWORLT
+ENIGWDXL
+TRODEOAL
+```
+
+After identifying and highlighting all the runic words, the armour looks like this:
+
+**HE**LW**O**RL**T**
+
+ENIG**W**DXL
+
+T**RODEO**AL
+
+Counting the highlighted symbols gives the final answer: **10 scales**
+
+*What is the number of scales on the armour that form runic words?*
