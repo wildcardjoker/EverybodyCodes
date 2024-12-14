@@ -75,24 +75,26 @@ void Part3()
     var words       = GetWords(input);
     var inscription = input[1..];
 
-    var grid              = inscription.Select(s => s.ToCharArray()).ToArray();
-    var columns           = grid[0].Length;
-    var totalRunicSymbols = 0;
-    Console.WriteLine();
-    WriteWords(3, words);
+    var grid        = inscription.Select(s => s.ToCharArray()).ToArray();
+    var columns     = grid[0].Length;
     var gridSymbols = new HashSet<(int row, int col)>();
 
+    Console.WriteLine();
+    WriteWords(3, words);
+
     // Check for runes in the grid using a sliding window and wrapping around the grid
-    for (var row = 0; row < grid.Length; row++)
+    for (var row = 0; row < grid.Length; row++) // Check each row
     {
-        for (var col = 0; col < columns; col++)
+        for (var col = 0; col < columns; col++) // Check each column
         {
-            foreach (var word in words)
+            foreach (var word in words) // Check each word
             {
                 // Check horizontally
                 var found = true;
                 for (var i = 0; i < word.Length; i++)
                 {
+                    // Check (row,column+i) for a matching character, wrapping around the grid if necessary
+                    // Mod columns will wrap the last column to the first column
                     if (grid[row][(col + i) % columns] != word[i])
                     {
                         found = false;
@@ -102,6 +104,7 @@ void Part3()
 
                 if (found)
                 {
+                    // Add the coordinates of the matching characters to the gridSymbols hashset
                     for (var i = 0; i < word.Length; i++)
                     {
                         gridSymbols.Add((row, (col + i) % columns));
@@ -109,14 +112,13 @@ void Part3()
                 }
 
                 // Check vertically
-                found = true;
-
-                // Check vertically
                 if (row + word.Length <= grid.Length)
                 {
                     found = true;
                     for (var i = 0; i < word.Length; i++)
                     {
+                        // Check (row+i,column) for a matching character
+                        // Do not wrap vertically, so no need to mod rows
                         if (grid[row + i][col] != word[i])
                         {
                             found = false;
@@ -126,6 +128,7 @@ void Part3()
 
                     if (found)
                     {
+                        // Add the coordinates of the matching characters to the gridSymbols hashset
                         for (var i = 0; i < word.Length; i++)
                         {
                             gridSymbols.Add((row + i, col));
@@ -144,15 +147,16 @@ void Part3()
             Console.Write(gridSymbols.Contains((row, col)) ? '*' : ".");
         }
 
-        Console.WriteLine();
+        Console.WriteLine("");
     }
 
+    Console.WriteLine();
     foreach (var symbol in gridSymbols)
     {
         Console.WriteLine($"({symbol.row},{symbol.col})");
     }
 
-    Console.WriteLine($"Total runic symbols (part 3): {gridSymbols.Count}");
+    Console.WriteLine($"Total scales (part 3): {gridSymbols.Count}");
 }
 
 void WriteWords(int part, IEnumerable<string> words)
