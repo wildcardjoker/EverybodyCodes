@@ -1,2 +1,2 @@
 # EverybodyCodes
-My attempt to solve the puzzles for [Everybody Codes]([url](https://everybody.codes/home))
+My attempt to solve the puzzles for [Everybody Codes](https://everybody.codes/home)
