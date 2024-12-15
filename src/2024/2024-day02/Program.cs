@@ -5,6 +5,8 @@
 //var inscription     = "POWE PO WER P OWE R".Split(' ');
 //var inscription     = "THERE IS THE END".Split(' ');
 
+#pragma warning disable CS8321 // Local function is declared but never used
+
 #region Using Directives
 using System.Text;
 #endregion
@@ -17,10 +19,10 @@ return;
 void Part1()
 {
     var input       = GetInput("input1.txt");
-    var words       = GetWords(input);
+    var words       = GetWords(input, false);
     var inscription = input[1].Split(' ');
 
-    WriteWords(1, words);
+    //WriteWords(1, words);
     var totalRunicWords = inscription.Sum(word => words.Count(word.Contains));
     Console.WriteLine($"Total runic words (part 1): {totalRunicWords}");
 }
@@ -36,15 +38,13 @@ void Part2()
     //                  THERE IS THE END
     //                  QAQAQ
     //                  """.Split(Environment.NewLine);
-    //words.AddRange(words.Select(word => new string(word.Reverse().ToArray())).ToArray());
-    //words = words.Distinct().OrderBy(x => x).ToList();
     var input       = GetInput("input2.txt");
-    var words       = GetWords(input);
+    var words       = GetWords(input, true);
     var inscription = input[1..];
 
     var totalRunicSymbols = 0;
-    Console.WriteLine();
-    WriteWords(2, words);
+
+    //WriteWords(2, words);
 
     foreach (var line in inscription)
     {
@@ -75,23 +75,14 @@ void Part2()
 
 void Part3()
 {
-    var input = GetInput("input3.txt");
-    var words = GetWords(input).ToList();
-    Console.WriteLine($"Words: {string.Join(',', words)}");
-    var reversedWords = words.Select(word => new string(word.Reverse().ToArray())).ToArray();
-    words.AddRange(reversedWords);
-    words = words.Distinct().OrderBy(x => x).ToList();
-    Console.WriteLine($"\nIncluding reversed words: {string.Join(',', words)}");
-
+    var input       = GetInput("input3.txt");
+    var words       = GetWords(input, true).ToList();
     var inscription = input[1..];
-
     var grid        = inscription.Select(s => s.ToCharArray()).ToArray();
     var columns     = grid[0].Length;
     var gridSymbols = new HashSet<(int row, int col)>();
 
-    Console.WriteLine();
-    WriteWords(3, words);
-
+    //WriteWords(3, words);
     // Check for runes in the grid using a sliding window and wrapping around the grid
     for (var row = 0; row < grid.Length; row++) // Check each row
     {
@@ -100,17 +91,7 @@ void Part3()
             foreach (var word in words) // Check each word
             {
                 // Check horizontally
-                var found = true;
-                for (var i = 0; i < word.Length; i++)
-                {
-                    // Check (row,column+i) for a matching character, wrapping around the grid if necessary
-                    // Mod columns will wrap the last column to the first column
-                    if (grid[row][(col + i) % columns] != word[i])
-                    {
-                        found = false;
-                        break;
-                    }
-                }
+                var found = !word.Where((t, i) => grid[row][(col + i) % columns] != t).Any();
 
                 if (found)
                 {
@@ -122,21 +103,19 @@ void Part3()
                 }
 
                 // Check vertically
-                if (row + word.Length <= grid.Length)
+                if (row + word.Length > grid.Length)
                 {
-                    found = true;
-                    for (var i = 0; i < word.Length; i++)
+                    continue;
+                }
+
+                {
+                    found = !word.Where((t, i) => grid[row + i][col] != t).Any();
+
+                    if (!found)
                     {
-                        // Check (row+i,column) for a matching character
-                        // Do not wrap vertically, so no need to mod rows
-                        if (grid[row + i][col] != word[i])
-                        {
-                            found = false;
-                            break;
-                        }
+                        continue;
                     }
 
-                    if (found)
                     {
                         // Add the coordinates of the matching characters to the gridSymbols hashset
                         for (var i = 0; i < word.Length; i++)
@@ -149,36 +128,15 @@ void Part3()
         }
     }
 
+    Console.WriteLine($"Total scales (part 3): {gridSymbols.Count}");
+
     // Display gridSymbols, using a 2D array to display the grid
     // Output to a file as well.
-    var sb = new StringBuilder();
-    for (var row = 0; row < grid.Length; row++)
-    {
-        for (var col = 0; col < columns; col++)
-        {
-            var c = gridSymbols.Contains((row, col)) ? '*' : '.';
-            sb.Append(c);
-            Console.Write(c);
-        }
-
-        sb.AppendLine();
-        Console.WriteLine("");
-    }
-
-    File.WriteAllText("output.txt", sb.ToString());
-    Console.WriteLine();
-    foreach (var symbol in gridSymbols)
-    {
-        Console.WriteLine($"({symbol.row},{symbol.col})");
-    }
-
-    Console.WriteLine($"Total scales (part 3): {gridSymbols.Count}");
+    ExportGrid(grid, columns, gridSymbols);
+    ExportCoordinates(gridSymbols);
 }
 
-void WriteWords(int part, IEnumerable<string> words)
-{
-    Console.WriteLine($"Part {part} Words: {string.Join(',', words)}");
-}
+void WriteWords(int part, IEnumerable<string> words) => Console.WriteLine($"Part {part} Words: {string.Join(',', words)}");
 
 List<bool> CreateLineMap(string s)
 {
@@ -203,4 +161,61 @@ void MapRunes(string s, string rune, ref List<bool> map)
 
 string[] GetInput(string fileName) => File.ReadAllLines(fileName).Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
-string[] GetWords(string[] strings) => strings[0].Replace("WORDS:", string.Empty).Split(',');
+List<string> GetWords(string[] strings, bool reverse)
+{
+    var list = strings[0].Replace("WORDS:", string.Empty).Split(',').ToList();
+    if (!reverse)
+    {
+        return list;
+    }
+
+    var reversedWords = list.Select(word => new string(word.Reverse().ToArray())).ToArray();
+    list.AddRange(reversedWords);
+    return list.Distinct().OrderBy(x => x).ToList();
+}
+
+void ExportGrid(char[][] chars, int columns, HashSet<(int row, int col)> valueTuples, bool writeToConsole = false)
+{
+    var sb = new StringBuilder();
+    for (var row = 0; row < chars.Length; row++)
+    {
+        for (var col = 0; col < columns; col++)
+        {
+            var c = valueTuples.Contains((row, col)) ? '*' : '.';
+            sb.Append(c);
+        }
+
+        sb.AppendLine();
+    }
+
+    var path = Path.Combine(AppContext.BaseDirectory, "output.txt");
+    File.WriteAllText(path, sb.ToString());
+    Console.WriteLine($"Grid exported to {path}");
+    if (!writeToConsole)
+    {
+        return;
+    }
+
+    Console.WriteLine(sb.ToString());
+    Console.WriteLine();
+}
+
+void ExportCoordinates(HashSet<(int row, int col)> valueTuples, bool writeToConsole = false)
+{
+    var sb = new StringBuilder();
+    foreach (var symbol in valueTuples)
+    {
+        sb.AppendLine($"({symbol.row},{symbol.col})");
+    }
+
+    var path = Path.Combine(AppContext.BaseDirectory, "coordinates.txt");
+    File.WriteAllText(path, sb.ToString());
+    Console.WriteLine($"Coordinates exported to {path}");
+    if (!writeToConsole)
+    {
+        return;
+    }
+
+    Console.WriteLine(sb.ToString());
+    Console.WriteLine();
+}
