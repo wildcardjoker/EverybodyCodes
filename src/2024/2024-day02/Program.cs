@@ -5,6 +5,10 @@
 //var inscription     = "POWE PO WER P OWE R".Split(' ');
 //var inscription     = "THERE IS THE END".Split(' ');
 
+#region Using Directives
+using System.Text;
+#endregion
+
 Part1();
 Part2();
 Part3();
@@ -71,8 +75,14 @@ void Part2()
 
 void Part3()
 {
-    var input       = GetInput("input3-example.txt");
-    var words       = GetWords(input);
+    var input = GetInput("input3.txt");
+    var words = GetWords(input).ToList();
+    Console.WriteLine($"Words: {string.Join(',', words)}");
+    var reversedWords = words.Select(word => new string(word.Reverse().ToArray())).ToArray();
+    words.AddRange(reversedWords);
+    words = words.Distinct().OrderBy(x => x).ToList();
+    Console.WriteLine($"\nIncluding reversed words: {string.Join(',', words)}");
+
     var inscription = input[1..];
 
     var grid        = inscription.Select(s => s.ToCharArray()).ToArray();
@@ -140,16 +150,22 @@ void Part3()
     }
 
     // Display gridSymbols, using a 2D array to display the grid
+    // Output to a file as well.
+    var sb = new StringBuilder();
     for (var row = 0; row < grid.Length; row++)
     {
         for (var col = 0; col < columns; col++)
         {
-            Console.Write(gridSymbols.Contains((row, col)) ? '*' : ".");
+            var c = gridSymbols.Contains((row, col)) ? '*' : '.';
+            sb.Append(c);
+            Console.Write(c);
         }
 
+        sb.AppendLine();
         Console.WriteLine("");
     }
 
+    File.WriteAllText("output.txt", sb.ToString());
     Console.WriteLine();
     foreach (var symbol in gridSymbols)
     {
