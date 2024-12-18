@@ -70,4 +70,44 @@ Finishing the first task quickly allows you to move to the next part of this cha
 
 ## Part III
 
+The final map of the challenge concerns the royal lands! The rules largely remain the same, but the map includes several separate areas. To improve the comfort of the ponds created at the end of this process, the king requires that **the rule about the gradual drop in slope also applies to blocks that are diagonally adjacent**. You also need to treat the noted map as it's surrounded by `.` area infinitely in all directions.
+
 ### Example based on the following notes:
+
+```
+..........
+..###.##..
+...####...
+..######..
+..######..
+...####...
+..........
+```
+
+In the first layer, the entire marked area can be dug out again with **25 blocks** of earth.
+
+```
+..........
+..111.11..
+...1111...
+..111111..
+..111111..
+...1111...
+..........
+```
+
+In the second layer, we can remove only **4 blocks** of earth to fulfill the new slope requirement.
+
+```
+..........
+..111.11..
+...1111...
+..112211..
+..112211..
+...1111...
+..........
+```
+
+In total, the maximum number of earth blocks that can be removed, while keeping the slope at the correct angle is **29 blocks**.
+
+*How many earth blocks can be safely removed at most from your final map while maintaining the proper slope?*
