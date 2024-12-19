@@ -17,14 +17,28 @@ void SolvePart2()
 
 void SolvePart3()
 {
-    var input  = File.ReadAllText("input3.txt");
-    var result = 0;
+    var result = CalculateStrikes("input3.txt", true);
     Console.WriteLine($"Part 3 result: {result}");
 }
 
-int CalculateStrikes(string inputFile)
+// function to calculate the median value in the array
+int GetMedian(int[] input)
+{
+    Array.Sort(input);
+    return input[input.Length / 2];
+}
+
+int CalculateStrikes(string inputFile, bool useMedian = false)
 {
     var input = File.ReadAllLines(inputFile).Select(int.Parse).ToArray();
-    var min   = input.Min();
+    if (useMedian)
+    {
+        var median          = GetMedian(input);
+        var numberOfStrikes = input.Where(x => x > median).Sum(x => x - median);
+        numberOfStrikes += input.Where(x => x < median).Sum(x => median - x);
+        return numberOfStrikes;
+    }
+
+    var min = input.Min();
     return input.Sum(x => x - min);
 }

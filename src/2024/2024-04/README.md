@@ -30,8 +30,24 @@ As soon as the last nail is perfectly aligned with the others, the log begins to
 
 What is the minimum number of hammer strikes needed to level all the nails?
 
-### Example based on the following notes:
-
 ## Part III
 
+You're getting the hang of it and swiftly complete the task. The log rotates again, revealing another section filled with nails. This time, however, the nails have additional **white dots**. Inspecting your hammer once more, you notice that the other side of the head has a corresponding white dot. Curious, you align the dots and strike. To your surprise, the **nail moves up exactly one unit**!
+
+The nails are much longer than before, so it would be wise to level them in the most efficient manner possible. To achieve this, you must first determine the optimal height to which the nails should be driven or pulled so that the **total number of hammer strikes is minimized**.
+
 ### Example based on the following notes:
+
+```
+2
+4
+5
+6
+8
+```
+
+The lengths of the nails are 2, 4, 5, 6, and 8 units. Assuming you want to level them all to 5 units, you need to hit the 2-unit nail **3 times** and the 4-unit nail **once** on their white dots, and strike the 6-unit nail **once** and the 8-unit nail **3 times** on their black dots.
+
+In total, this requires **8 hammer strikes**, which is the **minimal number** for this nail set.
+
+*What is the minimum number of hammer strikes needed to level all the nails?*
