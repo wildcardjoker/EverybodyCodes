@@ -21,19 +21,13 @@ void SolvePart3()
     Console.WriteLine($"Part 3 result: {result}");
 }
 
-// function to calculate the median value in the array
-int GetMedian(int[] input)
-{
-    Array.Sort(input);
-    return input[input.Length / 2];
-}
-
 int CalculateStrikes(string inputFile, bool useMedian = false)
 {
     var input = File.ReadAllLines(inputFile).Select(int.Parse).ToArray();
     if (useMedian)
     {
-        var median          = GetMedian(input);
+        Array.Sort(input);
+        var median          = input[input.Length / 2];
         var numberOfStrikes = input.Where(x => x > median).Sum(x => x - median);
         numberOfStrikes += input.Where(x => x < median).Sum(x => median - x);
         return numberOfStrikes;
