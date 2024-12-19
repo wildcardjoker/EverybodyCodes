@@ -26,6 +26,10 @@ In total, you need **10 strikes** of the hammer.
 
 ## Part II
 
+As soon as the last nail is perfectly aligned with the others, the log begins to rotate with a soft creak, revealing another side **bristling with many more nails**, each awaiting its turn to be levelled. Despite the seemingly endless challenge, the rules remain unchanged: your task is to hammer each nail into the log until their heads are perfectly level, forming a straight, unbroken line across the surface of the log. You take a deep breath, knowing that precision and patience will once again be your greatest allies in this test of skill.
+
+What is the minimum number of hammer strikes needed to level all the nails?
+
 ### Example based on the following notes:
 
 ## Part III
