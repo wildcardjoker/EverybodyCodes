@@ -1,0 +1,126 @@
+# Quest 5: Pseudo-Random Clap Dance
+
+## Part I
+
+No grand tournament is complete without lively music and spirited dancing! As evening falls, crowds gather in the main square to partake in the whimsical **Pseudo-Random Clap Dance**. Each participant receives a number from the Master of Ceremonies which is then prominently displayed on their chest. Then, they choose their places in one of **four columns**, standing one behind the other, forming long lines.
+
+With everyone in position, the dance begins. It unfolds in **rounds**, with each round featuring one person designated as the **Clapper**. In the first round, the Clapper is the first person in the first column. In the second round, it's the first person in the second column, followed by the first person in the third column in the third round, and finally, the first person in the fourth column in the fourth round.
+
+The Clapper **moves** to the beginning of the column to their right, facing its members. If the Clapper is from the fourth column, they move to the start of the first column. All members of that column **extend their arms to the sides**. The Clapper then **dances around the column** from the left, high-fiving each extended hand. Upon reaching the end of the column, they switch to the right side and continue in the opposite direction. The crowd **counts each clap out loud**, starting from one. **When the shouted number matches the Clapper's chest number, an absorption occurs**.
+
+A Clapper can be **absorbed into the column** in two ways. If they are circling from the left side, they are absorbed **in front of** the person they are high-fiving. If on the right side, they are absorbed **behind** that person.
+
+After absorption, the first person from each column combines their numbers into a **single large number**, shouting it out loud before the next round begins.
+
+Just before the start, the king delivers a brief speech, concluding with a caution to the knights participating in the tournament to remain vigilant! You decide to **practice predicting the flow of the dance**, so you note down all columns (*your notes*) as seen from above.
+
+### Example based on the following notes:
+
+1|2|3|4
+-|-|-|-
+-|-|-|-
+2|3|4|5
+3|4|5|2
+4|5|2|3
+5|2|3|4
+
+The first Clapper is the person marked with 2 on the top left side. After the initial move to the next column, it looks like this:
+
+1|2|3|4
+-|-|-|-
+-|-|-|-
+ ||2| | 
+3|3|4|5
+4|4|5|2
+5|5|2|3
+ |2|3|4
+
+Clapping time! The Clapper's number is 2, so there will be only 2 claps.
+
+
+"ONE!"|||||"TWO!"
+-------|---------
+3|`2`3|4|5| |3|3|4|5
+4|4|5|2| |4|`2`4|5|2
+5|5|2|3| |5|5|2|3
+||2|3|4| ||2|3|4
+
+The Clapper is on the left side of the target column, so absorption results in them taking the place in front of the last high-fived dancer.
+
+-|-|-|-
+-|-|-|-
+3|3|4|5
+4|`2`|5|2|
+5|4|2|3|
+ ||5|3|4
+ ||2||
+
+
+The people in the front combine their numbers and shout:
+
+|`"3`|`3`|`4`|`5!"`|
+-|-|-|-
+`3`|`3`|`4`|`5``
+4| 2| 5| 2
+5| 4| 2| 3
+  |5| 3| 4
+  ||2|
+
+The result of the first round is **3345**.
+
+The second round goes like this:
+
+| | | | | | | |`3`| | |"ONE!"| | | | |"TWO!"| | | | |"THREE!"| | | | | | | | | |"3245!"| | | |
+-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+3|`3`|4|5| |3|2|4|5| |3|2|`3`4|5| |3|2|4|5| |3|2|4|5| |3|2|4|5| |3|2|4|5
+4|2|5|2| |4|4|5|2| |4|4|5|2| |4|4|`3`5|2| |4|4|5|2| |4|4|5|2| |4|4|5|2
+5|4|2|3| |5|5|2|3| |5|5|2|3| |5|5|2|3| |5|5|`3`2|3| |5|5|`3`|3| |5|5|3|3
+| |5|3|4| | |2|3|4| | |2|3|4| | |2|3|4| | |2|3|4| | |2|2|4| | |2|2|4
+| |2| | | | | | | | | | | | | | | | | | | | | | | | | |3| | | | |3||
+
+The third round:
+
+|||||||||`4`||"ONE!"|||||"TWO!"|||||"THREE!"|||||"FOUR!"||||||||||"3255!"||||
+-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+3|2|`4`|5| |3|2|5|5| |3|2|5|`4`5| |3|2|5|5|    |3|2|5|5|    |3|2|5|5|    |3|2|5|5|   |3|2|5|5
+4|4|5|2|   |4|4|3|2| |4|4|3|2|    |4|4|3|`4`2| |4|4|3|2|    |4|4|3|2|    |4|4|3|2|   |4|4|3|2
+5|5|3|3|   |5|5|2|3| |5|5|2|3|    |5|5|2|3|    |5|5|2|`4`3| |5|5|2|3|    |5|5|2|3|   |5|5|2|3
+||2|2|4|   | |2|3|4| | |2|3|4|    | |2|3|4|    | |2|3|4|    | |2|3|`4`4| | |2|3|`4`| | |2|3|4
+|| |3| |   | | | | | | | | | |    | | | | |    | | | | |    | | | |    | | | | |4|   | | | |4
+
+The following round:
+
+||||||`5`|||||"ONE!"|||||"TWO!"|||||"THREE!"|||||"FOUR!"|||||"FIVE!"||||||||||"3252!"||||
+-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+3|2|5|`5`| |3|2|5|2| |`5`3|2|5|2| |3|2|5|2|    |3|2|5|2|    |3|2|5|2|    |3|2|5|2|    |3|2|5|2|     |3|2|5|2
+4|4|3|2  | |4|4|3|3| | 4  |4|3|3| |`5`4|4|3|3| |4|4|3|3|    |4|4|3|3|    |4|`5`4|3|3| |4|4|3|3| |4|4|3|3
+5|5|2|3  | |5|5|2|4| | 5  |5|2|4| | 5 |5|2|4|  |`5`5|5|2|4| |5`5`|5|2|4| |5|5|2|4|    |5|5|2|4| |5|5|2|4
+| |2|3|4 | | |2|3|4| |    |2|3|4| |   |2|3|4|  | |2|3|4|    | |2|3|4|    | |2|3|4|    |5|2|3|4| |5|2|3|4
+| | | |4 |
+
+Note that the Clapper ends on the right side of the column, so the target place in this case is **behind** the last high-fived person.
+
+For this example, the numbers shouted at the end of each round are as follows:
+
+|Round | Number|
+|--------------|
+|1     | 3345  |
+|2     | 3245  |
+|3     | 3255  |
+|4     | 3252  |
+|5     | 4252  |
+|6     | 4452  |
+|7     | 4422  |
+|8     | 4423  |
+|9     | 2423  |
+|10    | 2323  |
+
+*What is the number shouted at the end of the 10th round?*
+
+## Part II
+
+### Example based on the following notes:
+
+## Part III
+
+### Example based on the following notes:
