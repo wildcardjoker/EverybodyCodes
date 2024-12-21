@@ -1,6 +1,4 @@
 ﻿#region Using Directives
-using System.Text.RegularExpressions;
-using Humanizer;
 #endregion
 
 SolvePart1();
@@ -10,8 +8,22 @@ return;
 
 void SolvePart1()
 {
-    var       regex     = SplitInputRegex();
-    var       columns   = File.ReadAllLines("input-example1.txt").Select(s => regex.Matches(s).Select(m => int.Parse(m.Value)).ToList()).ToList();
+    var lines   = File.ReadAllLines("input1.txt").Select(s => s.Replace(" ", "")).ToList();
+    var columns = new List<List<int>>();
+
+    for (var i = 0; i < lines[0].Length; i++)
+    {
+        columns.Add([]);
+    }
+
+    foreach (var line in lines)
+    {
+        for (var i = 0; i < line.Length; i++)
+        {
+            columns[i].Add(int.Parse(line[i].ToString()));
+        }
+    }
+
     const int numRounds = 10;
     var       results   = new List<string>();
     while (results.Count < numRounds)
@@ -32,7 +44,7 @@ void SolvePart1()
                 }
 
                 count++;
-                Console.WriteLine(count.ToWords());
+
                 if (count == clapper)
                 {
                     columns[nextColumn].Insert(index, clapper);
@@ -46,20 +58,15 @@ void SolvePart1()
             while (!absorbed);
 
             var number = string.Join(string.Empty, columns.Select(col => col[0]));
-
-            //Console.WriteLine($"Round {numRounds}: {number}");
+            DisplayColumns(columns);
             results.Add(number);
-
-            //DisplayColumns(columns);
         }
     }
 
-    for (var i = 0; i < results.Count; i++)
+    for (var i = 0; i < numRounds; i++)
     {
         Console.WriteLine($"{i + 1}: {results[i]}");
     }
-
-    //Console.WriteLine($"Part 1 result: {result}");
 }
 
 void SolvePart2()
@@ -84,10 +91,4 @@ void DisplayColumns(List<List<int>> columns)
     }
 
     Console.WriteLine();
-}
-
-internal partial class Program
-{
-    [GeneratedRegex(@"\d")]
-    private static partial Regex SplitInputRegex();
 }
