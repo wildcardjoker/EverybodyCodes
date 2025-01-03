@@ -49,7 +49,7 @@ void PopulateColumns(List<string> lines, List<List<int>> columns)
 void ProcessColumns(List<List<int>> columns, List<string> results)
 {
     var clapIndex = 0;
-    for (var row = 0; row < 10; row++)
+    for (var round = 0; round < 10; round++)
     {
         var clapper = columns[clapIndex][0];
         columns[clapIndex].RemoveAt(0);
@@ -63,9 +63,47 @@ void ProcessColumns(List<List<int>> columns, List<string> results)
         targetColumn.Insert(moves, clapper);
         clapIndex = (clapIndex + 1) % columns.Count;
 
-        var number = string.Join(string.Empty, columns.Select(col => col[0].ToString()));
+        var number = GenerateNumber(columns);
         results.Add(number);
     }
+}
+
+KeyValuePair<string, int> ProcessColumnsPart2(List<List<int>> columns, List<string> results)
+{
+    var       clapIndex  = 0;
+    var       shouts     = new Dictionary<string, int>();
+    const int count      = 2024;
+    var       finalShout = shouts.FirstOrDefault(x => x.Value == count); // Find the first shout that has been shouted 2024 times
+
+    // Keep going until we find the shout that has been shouted 2024 times
+    // This isn't a very efficient way to do this, but it works for the input size
+    // Ideally, I'd use a custom class to keep track of the number of times each shout has been shouted
+    while (finalShout.Equals(default(KeyValuePair<string, int>)))
+    {
+        // Same processing as for Part 1
+        var clapper = columns[clapIndex][0];
+        columns[clapIndex].RemoveAt(0);
+        var targetColumn = columns[(clapIndex + 1) % 4];
+        var moves        = Math.Abs(clapper % (targetColumn.Count * 2) - 1);
+        if (moves > targetColumn.Count)
+        {
+            moves = targetColumn.Count * 2 - moves;
+        }
+
+        targetColumn.Insert(moves, clapper);
+        clapIndex = (clapIndex + 1) % columns.Count;
+
+        var number = GenerateNumber(columns);
+        results.Add(number);
+        if (!shouts.TryAdd(number, 1))
+        {
+            shouts[number]++;
+        }
+
+        finalShout = shouts.FirstOrDefault(kvp => kvp.Value == count);
+    }
+
+    return finalShout;
 }
 
 void DisplayResults(int numRounds, List<string> results)
@@ -83,14 +121,10 @@ void SolvePart2()
 
     PopulateColumns(lines, columns);
 
-    const int numRounds = 10;
+    const int numRounds = int.MaxValue;
     var       results   = new List<string>();
-    while (results.Count < numRounds)
-    {
-        ProcessColumns(columns, results);
-    }
-
-    DisplayResults(numRounds, results);
+    var       lastShout = ProcessColumnsPart2(columns, results);
+    Console.WriteLine($"Part 2 result: {lastShout.Key} x {results.Count} = {Convert.ToInt32(lastShout.Key) * results.Count}");
 }
 
 void SolvePart3()
@@ -99,3 +133,5 @@ void SolvePart3()
     var result = 0;
     Console.WriteLine($"Part 3 result: {result}");
 }
+
+string GenerateNumber(List<List<int>> list) => string.Join(string.Empty, list.Select(col => col[0].ToString()));

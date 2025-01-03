@@ -119,7 +119,47 @@ For this example, the numbers shouted at the end of each round are as follows:
 
 ## Part II
 
+The first dance went exactly as you predicted, so you feel ready for the real challenge.
+
+For the upcoming dance, the master of ceremonies meticulously assigns numbers and personally positions the participants in columns. The king takes the stage once more:
+ 
+> As you know, in our traditional dance some of the numbers shouted at the end of each round 
+ can eventually repeat. The next dance will conclude in the round where one of the numbers 
+ at the end of the round is shouted for the 2024th time! Your task, my dear knights,
+ is to **predict this number and the duration of the dance**. Multiply the final number
+ by the round in which it was shouted for the 2024th time to get your final answer.
+>
+> Good luck!
+
 ### Example based on the following notes:
+
+```
+2 3 4 5
+6 7 8 9
+```
+
+In this example, the dance unfolds as follows:
+
+Round | Number | Shouts
+------|--------|-------
+1:    | 6345   | 1	    
+2:    | 6245   | 1	    
+3:    | 6285   | 1	    
+4:    | 5284   | 1	    
+5:    | 6584   | 1	    
+6:    | 6254   | 1	    
+7:    | 6285   | 2	    
+8:    | 5284   | 2	    
+9:    | 6584   | 2	    
+10:   | 6254   | 2	    
+...   |        |	    
+8095: | 6285   | 2024  
+
+After 10 rounds, some numbers were shouted twice already: 6285, 5284, 6584, and 6254. By continuing further, the first number shouted for the 2024th time is **6285**, and this happens at the end of round **8095**.
+
+Multiplying 6285 by 8095 gives the final answer: **50877075**.
+
+*What do you get if you multiply the first number shouted for the 2024th time by the total number of dance rounds?*
 
 ## Part III
 
