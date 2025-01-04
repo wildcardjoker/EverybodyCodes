@@ -1,4 +1,8 @@
-﻿SolvePart1();
+﻿#region Using Directives
+using System.Diagnostics;
+#endregion
+
+SolvePart1();
 SolvePart2();
 SolvePart3();
 return;
@@ -11,7 +15,7 @@ void SolvePart1()
     PopulateColumns(lines, columns);
 
     const int numRounds = 10;
-    var       results   = new List<string>();
+    var       results   = new List<ulong>();
     while (results.Count < numRounds)
     {
         ProcessColumns(columns, results);
@@ -46,7 +50,7 @@ void PopulateColumns(List<string> lines, List<List<int>> columns)
     }
 }
 
-void ProcessColumns(List<List<int>> columns, List<string> results)
+void ProcessColumns(List<List<int>> columns, List<ulong> results)
 {
     var clapIndex = 0;
     for (var round = 0; round < 10; round++)
@@ -68,17 +72,16 @@ void ProcessColumns(List<List<int>> columns, List<string> results)
     }
 }
 
-KeyValuePair<string, int> ProcessColumnsPart2(List<List<int>> columns, List<string> results)
+Shout ProcessColumnsPart2(List<List<int>> columns, List<ulong> results)
 {
     var       clapIndex  = 0;
-    var       shouts     = new Dictionary<string, int>();
+    var       shouts     = new List<Shout>();
     const int count      = 2024;
-    var       finalShout = shouts.FirstOrDefault(x => x.Value == count); // Find the first shout that has been shouted 2024 times
+    var       finalShout = shouts.FirstOrDefault(x => x.Count == count); // Find the first shout that has been shouted 2024 times
+    var       sw         = Stopwatch.StartNew();
 
     // Keep going until we find the shout that has been shouted 2024 times
-    // This isn't a very efficient way to do this, but it works for the input size
-    // Ideally, I'd use a custom class to keep track of the number of times each shout has been shouted
-    while (finalShout.Equals(default(KeyValuePair<string, int>)))
+    while (finalShout == null)
     {
         // Same processing as for Part 1
         var clapper = columns[clapIndex][0];
@@ -95,36 +98,34 @@ KeyValuePair<string, int> ProcessColumnsPart2(List<List<int>> columns, List<stri
 
         var number = GenerateNumber(columns);
         results.Add(number);
-        if (!shouts.TryAdd(number, 1))
+        var shout = shouts.FirstOrDefault(x => x.ShoutValue == number);
+        if (shout == null)
         {
-            shouts[number]++;
+            shouts.Add(new Shout(number));
+        }
+        else
+        {
+            shout.Count++;
         }
 
-        finalShout = shouts.FirstOrDefault(kvp => kvp.Value == count);
+        finalShout = shouts.FirstOrDefault(x => x.Count == count);
     }
 
+    sw.Stop();
     return finalShout;
-}
-
-void DisplayResults(int numRounds, List<string> results)
-{
-    for (var i = 0; i < numRounds; i++)
-    {
-        Console.WriteLine($"{i + 1}: {results[i]}");
-    }
 }
 
 void SolvePart2()
 {
-    var lines   = File.ReadAllLines("input-example2.txt").ToList();
+    var lines   = File.ReadAllLines("input2.txt").ToList();
     var columns = InitializeColumns(lines[0].Split(' ').Length);
 
     PopulateColumns(lines, columns);
 
     const int numRounds = int.MaxValue;
-    var       results   = new List<string>();
+    var       results   = new List<ulong>();
     var       lastShout = ProcessColumnsPart2(columns, results);
-    Console.WriteLine($"Part 2 result: {lastShout.Key} x {results.Count} = {Convert.ToInt32(lastShout.Key) * results.Count}");
+    Console.WriteLine($"Part 2 result: {lastShout.ShoutValue} x {results.Count} = {lastShout.ShoutValue * (ulong) results.Count}");
 }
 
 void SolvePart3()
@@ -134,4 +135,12 @@ void SolvePart3()
     Console.WriteLine($"Part 3 result: {result}");
 }
 
-string GenerateNumber(List<List<int>> list) => string.Join(string.Empty, list.Select(col => col[0].ToString()));
+ulong GenerateNumber(List<List<int>> list) => Convert.ToUInt64(string.Join(string.Empty, list.Select(col => col[0].ToString())));
+
+internal class Shout(ulong shoutValue)
+{
+    #region Properties
+    public ulong Count      {get; set;} = 1;
+    public ulong ShoutValue {get;}      = shoutValue;
+    #endregion
+}
