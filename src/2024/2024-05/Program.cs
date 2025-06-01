@@ -2,8 +2,8 @@
 using System.Diagnostics;
 #endregion
 
-SolvePart1();
-SolvePart2();
+//SolvePart1();
+//SolvePart2();
 SolvePart3();
 return;
 
@@ -26,11 +26,10 @@ void SolvePart1()
 
 List<List<int>> InitializeColumns(int length)
 {
-    // Create a column for each character
     var columns = new List<List<int>>();
     for (var i = 0; i < length; i++)
     {
-        columns.Add([]);
+        columns.Add(new List<int>());
     }
 
     return columns;
@@ -38,13 +37,10 @@ List<List<int>> InitializeColumns(int length)
 
 void PopulateColumns(List<string> lines, List<List<int>> columns)
 {
-    // Read each line
     foreach (var values in lines.Select(line => line.Split(' ').Select(int.Parse).ToArray()))
     {
-        // Read each value in the line
         for (var i = 0; i < values.Length; i++)
         {
-            // Add the value to the appropriate column
             columns[i].Add(values[i]);
         }
     }
@@ -57,12 +53,8 @@ void ProcessColumns(List<List<int>> columns, List<ulong> results)
     {
         var clapper = columns[clapIndex][0];
         columns[clapIndex].RemoveAt(0);
-        var targetColumn = columns[(clapIndex + 1) % 4];
-        var moves        = Math.Abs(clapper % (targetColumn.Count * 2) - 1);
-        if (moves > targetColumn.Count)
-        {
-            moves = targetColumn.Count * 2 - moves;
-        }
+        var targetColumn = columns[(clapIndex + 1) % columns.Count];
+        var moves        = CalculateMoves(clapper, targetColumn.Count);
 
         targetColumn.Insert(moves, clapper);
         clapIndex = (clapIndex + 1) % columns.Count;
@@ -72,26 +64,31 @@ void ProcessColumns(List<List<int>> columns, List<ulong> results)
     }
 }
 
+int CalculateMoves(int clapper, int targetColumnCount)
+{
+    var moves = Math.Abs(clapper % (targetColumnCount * 2) - 1);
+    if (moves > targetColumnCount)
+    {
+        moves = targetColumnCount * 2 - moves;
+    }
+
+    return moves;
+}
+
 Shout ProcessColumnsPart2(List<List<int>> columns, List<ulong> results)
 {
     var       clapIndex  = 0;
     var       shouts     = new List<Shout>();
     const int count      = 2024;
-    var       finalShout = shouts.FirstOrDefault(x => x.Count == count); // Find the first shout that has been shouted 2024 times
+    var       finalShout = shouts.FirstOrDefault(x => x.Count == count);
     var       sw         = Stopwatch.StartNew();
 
-    // Keep going until we find the shout that has been shouted 2024 times
     while (finalShout == null)
     {
-        // Same processing as for Part 1
         var clapper = columns[clapIndex][0];
         columns[clapIndex].RemoveAt(0);
-        var targetColumn = columns[(clapIndex + 1) % 4];
-        var moves        = Math.Abs(clapper % (targetColumn.Count * 2) - 1);
-        if (moves > targetColumn.Count)
-        {
-            moves = targetColumn.Count * 2 - moves;
-        }
+        var targetColumn = columns[(clapIndex + 1) % columns.Count];
+        var moves        = CalculateMoves(clapper, targetColumn.Count);
 
         targetColumn.Insert(moves, clapper);
         clapIndex = (clapIndex + 1) % columns.Count;
@@ -122,17 +119,80 @@ void SolvePart2()
 
     PopulateColumns(lines, columns);
 
-    const int numRounds = int.MaxValue;
-    var       results   = new List<ulong>();
-    var       lastShout = ProcessColumnsPart2(columns, results);
+    var results   = new List<ulong>();
+    var lastShout = ProcessColumnsPart2(columns, results);
     Console.WriteLine($"Part 2 result: {lastShout.ShoutValue} x {results.Count} = {lastShout.ShoutValue * (ulong) results.Count}");
 }
 
 void SolvePart3()
 {
-    var input  = File.ReadAllText("input3.txt");
-    var result = 0;
+    // Modified using code from https://github.com/CodingAP/everybody-codes/blob/main/quests/2024/quest05/solution.js
+    var result = Part3(File.ReadAllText("input3.txt"));
     Console.WriteLine($"Part 3 result: {result}");
+}
+
+string Part3(string input)
+{
+    var dance = ParseInput(input);
+
+    // find the biggest number shouted out
+    // 10000 is arbitrary, but should be enough to find the maximum
+    var max = "0";
+
+    for (var i = 0; i < 10000; i++)
+    {
+        var turn = i % dance.Length;
+        DoDance(dance, turn);
+
+        var code = ShoutCode(dance);
+        max = long.Parse(code) > long.Parse(max) ? code : max;
+    }
+
+    return max;
+}
+
+static int[][] ParseInput(string input)
+{
+    var lines  = input.Replace("\r", "").Split('\n');
+    var matrix = lines.Select(line => line.Split(' ').Select(int.Parse).ToArray()).ToArray();
+
+    // transpose
+    var rowCount = matrix.Length;
+    var colCount = matrix[0].Length;
+    var dance    = new int[colCount][];
+    for (var i = 0; i < colCount; i++)
+    {
+        dance[i] = new int[rowCount];
+        for (var j = 0; j < rowCount; j++)
+        {
+            dance[i][j] = matrix[j][i];
+        }
+    }
+
+    return dance;
+}
+
+static void DoDance(int[][] dance, int turn)
+{
+    var next = (turn + 1) % dance.Length;
+
+    var num = dance[turn][0];
+    dance[turn] = dance[turn].Skip(1).ToArray();
+
+    var side = (int) Math.Ceiling((double) num / dance[next].Length) % 2 == 0;
+
+    var index = num % dance[next].Length;
+    index =  index == 0 ? dance[next].Length : index;
+    index -= 1;
+
+    var list = dance[next].ToList();
+    list.Insert(side ? list.Count - index : index, num);
+    dance[next] = list.ToArray();
+}
+
+static string ShoutCode(int[][] dance)
+{
+    return string.Concat(dance.Select(arr => arr[0].ToString()));
 }
 
 ulong GenerateNumber(List<List<int>> list) => Convert.ToUInt64(string.Join(string.Empty, list.Select(col => col[0].ToString())));

@@ -163,4 +163,20 @@ Multiplying 6285 by 8095 gives the final answer: **50877075**.
 
 ## Part III
 
+Time for the final dance! The Master of Ceremonies once again arranges everyone with the utmost care.
+The king presents another riddle:
+ 
+> Sadly, every good time must come to an end eventually,
+> but what if our next dance were to go on forever? 
+> Can you predict what would be the highest number that could be shouted? 
+    
 ### Example based on the following notes:
+
+```
+2 3 4 5
+6 7 8 9
+```
+
+Assuming this dance would never end, the highest number shouted would be: `6584`.
+
+*What is the highest possible number that can appear at the end of a round in the final dance?*
