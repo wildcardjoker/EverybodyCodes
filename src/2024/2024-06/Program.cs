@@ -7,14 +7,12 @@ void SolvePart1()
 {
     var input = File.ReadAllText("input1.txt");
     var tree  = ConstructTree(input);
-    Console.WriteLine("Constructed Tree:");
-    foreach (var line in tree)
-    {
-        Console.WriteLine(line);
-    }
 
-    var result = tree.OrderBy(x => x.Length).First();
-    Console.WriteLine($"Part 1 result: {result}");
+    //DisplayTreeStats(tree);
+
+    // Find the unique path (only one branch will have a unique length)
+    var result = tree.GroupBy(t => t.Length).OrderBy(g => g.Count()).First();
+    Console.WriteLine($"Part 1 result: {result.First()}");
 }
 
 void SolvePart2()
@@ -33,57 +31,59 @@ void SolvePart3()
 
 List<string> ConstructTree(string input)
 {
-    const string treeRoot = "RR";
-    var          tree     = new List<string>();
-    var          lines    = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
-    var          root     = lines.First(line => line.StartsWith("RR"));
+    // Split the input into lines, remove empty entries, and sort them
+    var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+    var root  = lines.First(line => line.StartsWith("RR"));
     lines.Sort();
+
+    // Remove the root from the list of lines to process
     lines.Remove(root);
-    lines.Insert(0, root);
 
-    foreach (var line in lines)
+    var nodes = new Queue<Node>(lines.Select(line => new Node(line)));
+
+    // Initialize the tree with the root node and its branches
+    var rootNode = new Node(root);
+    var tree     = rootNode.Branches.Select(branch => $"{rootNode.Root}{branch}").ToList();
+
+    while (nodes.Any())
     {
-        var node = new Node(line);
-        foreach (var branch in node.Branches)
+        // Dequeue the next node to process; removes it from the queue
+        var node = nodes.Dequeue();
+
+        // Find all paths that end with the current node's root
+        var paths = tree.Where(p => p.EndsWith(node.Root)).ToList();
+        if (!paths.Any())
         {
-            if (node.Root.Equals(treeRoot))
-            {
-                tree.Add($"{node.Root}{branch}");
-                continue;
-            }
+            nodes.Enqueue(node); // Re-queue the node if no paths found
+            continue;
+        }
 
-            // Find the parent path in the tree
-            var parentPath = tree.FirstOrDefault(p => p.EndsWith(node.Root));
+        foreach (var path in paths)
+        {
+            // Add branches to the existing paths
+            tree.AddRange(node.Branches.Select(branch => $"{path}{branch}"));
 
-            // If a parent path is found, append the branch to it
-            var index = string.IsNullOrWhiteSpace(parentPath) ? -1 : tree.IndexOf(parentPath);
-            if (index != -1)
-            {
-                tree[index] = $"{parentPath}{branch}";
-            }
-            else
-            {
-                // If no parent path found, add the branch directly
-                tree.Add($"{treeRoot}{node.Root}{branch}");
-            }
+            // Remove the original path since we are extending it
+            tree.Remove(path);
         }
     }
 
-    // Sanity check; ensure the tree starts with the root node and ends with '@'
+    // Remove branches that don't have fruit (i.e., don't end with '@')
+    return tree.Where(branch => branch.EndsWith('@')).ToList();
+}
 
-    if (tree.Any() && tree.All(branch => branch.StartsWith(treeRoot)) && tree.All(branch => branch.EndsWith('@')))
+void DisplayTreeStats(List<string> list)
+{
+    foreach (var line in list)
     {
-        return tree;
+        Console.WriteLine(line);
     }
 
-    Console.WriteLine("*** ERROR *** Not all branches have fruit!");
-    foreach (var branch in tree)
+    Console.WriteLine($"Total branches: {list.Count}");
+    foreach (var treeBranches in list.GroupBy(t => t.Length))
     {
-        Console.WriteLine(branch);
+        Console.WriteLine($"Length of {treeBranches.Key}: {treeBranches.Count()}");
     }
-
-    Console.ReadKey();
-    return tree;
 }
 
 internal class Node
