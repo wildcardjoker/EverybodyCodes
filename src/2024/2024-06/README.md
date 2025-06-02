@@ -44,7 +44,7 @@ All the fruits, except for one, are located on branches with the same path lengt
 
 ## Part II
 
-Each participant quickly locates the finest fruit on their tree and then ventures deeper into the garden where the trees stand much taller and more majestic. Once again, everyone finds themselves in front of a tree adorned with fruits that provide superhuman strength, with each participant diligently attempting to uncover the path to the most potent fruit among the tree’s vibrant branches.
+Each participant quickly locates the finest fruit on their tree and then ventures deeper into the garden where the trees stand much taller and more majestic. Once again, everyone finds themselves in front of a tree adorned with fruits that provide superhuman strength, with each participant diligently attempting to uncover the path to the most potent fruit among the treeï¿½s vibrant branches.
 
 Confident in your understanding of the rules, you carefully jot down the intricate connections of your tree and set to work. The root is still marked with `RR`; however, there are many more branches to analyse.
 

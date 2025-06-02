@@ -13,6 +13,7 @@ void SolvePart1()
     // Find the unique path (only one branch will have a unique length)
     var result = GetMostPowerfulFruit(tree);
     Console.WriteLine($"Part 1 result: {result}");
+
 }
 
 void SolvePart2()
@@ -50,7 +51,6 @@ List<string> ConstructTree(string input)
     // Split the input into lines, remove empty entries, and sort them
     var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
     var root  = lines.First(line => line.StartsWith("RR:"));
-
     lines.Sort();
 
     // Remove the root from the list of lines to process
