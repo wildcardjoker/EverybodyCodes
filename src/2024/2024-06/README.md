@@ -54,4 +54,8 @@ Given the tree's impressive size, **describe the final path using only the first
 
 ## Part III
 
-### Example based on the following notes:
+The final challenge takes place at the most ancient tree in the orchard, a magnificent giant adorned with countless branches and fruits of extraordinary power. Unfortunately, **this majestic tree has come under attack from relentless pests: bugs and ants**, which resemble actual tree branches. You make note of them along with other connections so the gardeners can easily find them later.
+
+As in Part II, the root is marked with `RR`, and you should describe the final path using only the first letters of each branch.
+
+*What is the path to the most powerful fruit on the tree?*
