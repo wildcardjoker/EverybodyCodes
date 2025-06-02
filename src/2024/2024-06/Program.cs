@@ -11,21 +11,38 @@ void SolvePart1()
     //DisplayTreeStats(tree);
 
     // Find the unique path (only one branch will have a unique length)
-    var result = tree.GroupBy(t => t.Length).OrderBy(g => g.Count()).First();
-    Console.WriteLine($"Part 1 result: {result.First()}");
+    var result = GetMostPowerfulFruit(tree);
+    Console.WriteLine($"Part 1 result: {result}");
+
 }
 
 void SolvePart2()
 {
-    var input  = File.ReadAllText("input2.txt");
-    var result = 0;
+    var input = File.ReadAllText("input2.txt");
+    var tree  = ConstructTree(input);
+
+    //DisplayTreeStats(tree);
+
+    var result = GetMostPowerfulFruit(tree);
+
+    //Console.WriteLine($"The most powerful fruit is on path {result}");
+
+    // Remove the first 2 characters, then extract the first character from each group of 4 characters
+    result = GetDescriptivePath(result);
     Console.WriteLine($"Part 2 result: {result}");
 }
 
 void SolvePart3()
 {
-    var input  = File.ReadAllText("input3.txt");
-    var result = 0;
+    var input = File.ReadAllText("input3.txt");
+    var tree  = ConstructTree(input);
+
+    //DisplayTreeStats(tree);
+    var result = GetMostPowerfulFruit(tree);
+
+    //Console.WriteLine($"The most powerful fruit is on path {result}");
+
+    result = GetDescriptivePath(result);
     Console.WriteLine($"Part 3 result: {result}");
 }
 
@@ -33,7 +50,7 @@ List<string> ConstructTree(string input)
 {
     // Split the input into lines, remove empty entries, and sort them
     var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
-    var root  = lines.First(line => line.StartsWith("RR"));
+    var root  = lines.First(line => line.StartsWith("RR:"));
     lines.Sort();
 
     // Remove the root from the list of lines to process
@@ -54,7 +71,11 @@ List<string> ConstructTree(string input)
         var paths = tree.Where(p => p.EndsWith(node.Root)).ToList();
         if (!paths.Any())
         {
-            nodes.Enqueue(node); // Re-queue the node if no paths found
+            if (nodes.Any(treeNode => treeNode.Branches.Contains(node.Root)))
+            {
+                nodes.Enqueue(node); // Re-queue the node if no paths found
+            }
+
             continue;
         }
 
@@ -84,6 +105,17 @@ void DisplayTreeStats(List<string> list)
     {
         Console.WriteLine($"Length of {treeBranches.Key}: {treeBranches.Count()}");
     }
+}
+
+string GetMostPowerfulFruit(List<string> list)
+{
+    return list.GroupBy(t => t.Length).OrderBy(g => g.Count()).First().First();
+}
+
+string GetDescriptivePath(string s)
+{
+    var pathWithoutRoot = new string(s[2..].Where((c, i) => i % 4 == 0).ToArray());
+    return $"R{pathWithoutRoot}";
 }
 
 internal class Node

@@ -44,8 +44,18 @@ All the fruits, except for one, are located on branches with the same path lengt
 
 ## Part II
 
-### Example based on the following notes:
+Each participant quickly locates the finest fruit on their tree and then ventures deeper into the garden where the trees stand much taller and more majestic. Once again, everyone finds themselves in front of a tree adorned with fruits that provide superhuman strength, with each participant diligently attempting to uncover the path to the most potent fruit among the tree�s vibrant branches.
+
+Confident in your understanding of the rules, you carefully jot down the intricate connections of your tree and set to work. The root is still marked with `RR`; however, there are many more branches to analyse.
+
+Given the tree's impressive size, **describe the final path using only the first letters of each branch**. For example a path with branches: `RR,ABAB,CDCD,EFEF,ROLO,@` becomes a `RACER@`.
+
+*What is the path to the most powerful fruit on your tree?*
 
 ## Part III
 
-### Example based on the following notes:
+The final challenge takes place at the most ancient tree in the orchard, a magnificent giant adorned with countless branches and fruits of extraordinary power. Unfortunately, **this majestic tree has come under attack from relentless pests: bugs and ants**, which resemble actual tree branches. You make note of them along with other connections so the gardeners can easily find them later.
+
+As in Part II, the root is marked with `RR`, and you should describe the final path using only the first letters of each branch.
+
+*What is the path to the most powerful fruit on the tree?*
